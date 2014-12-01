@@ -1,0 +1,15 @@
+[submodule "libraries/Adafruit_GFX"]
+	path = libraries/Adafruit_GFX
+	url = https://github.com/adafruit/Adafruit-GFX-Library.git
+[submodule "libraries/Adafruit_NeoPixel"]
+	path = libraries/Adafruit_NeoPixel
+	url = https://github.com/adafruit/Adafruit_NeoPixel.git
+[submodule "libraries/ArduinoThread"]
+	path = libraries/ArduinoThread
+	url = https://github.com/ivanseidel/ArduinoThread.git
+[submodule "libraries/TMRpcm"]
+	path = libraries/TMRpcm
+	url = https://github.com/TMRh20/TMRpcm.git
+[submodule "libraries/Adafruit_LEDBackpack"]
+	path = libraries/Adafruit_LEDBackpack
+	url = https://github.com/adafruit/Adafruit-LED-Backpack-Library.git

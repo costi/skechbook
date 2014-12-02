@@ -1,5 +1,5 @@
 #include <FiniteStateMachine.h>
-#include <Button.h>
+#include <ClickButton.h>
 
 #define LEFT_ENABLE 3
 #define LEFT_FORWARD 2
@@ -9,7 +9,7 @@
 #define RIGHT_FORWARD 6
 #define RIGHT_BACKWARD 7
 
-Button startButton = Button(8, PULLUP);
+ClickButton startButton(8, LOW, CLICKBTN_PULLUP);
 
 #define NUMBER_OF_STATES 3
 State Forward = State(go_forward, noop, noop);
@@ -31,9 +31,11 @@ void setup(){
 }
 
 void loop(){
+  startButton.Update();
   analogWrite(LEFT_ENABLE, 200);
   analogWrite(RIGHT_ENABLE, 200);
-  if(startButton.uniquePress()){
+  if(startButton.clicks > 0){
+    Serial.println(startButton.clicks);
     Serial.println("Pressed Button");
     buttonPresses = ++buttonPresses % NUMBER_OF_STATES;
     switch(buttonPresses){
@@ -49,8 +51,7 @@ void loop(){
 void go_forward(){
   debug("Forward!");
   digitalWrite(LEFT_FORWARD, HIGH);
-  digitalWrite(LEFT_BACKWARD, LOW);  
-
+  digitalWrite(LEFT_BACKWARD, LOW);
   digitalWrite(RIGHT_FORWARD, HIGH);
   digitalWrite(RIGHT_BACKWARD, LOW);  
 }

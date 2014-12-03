@@ -1,15 +1,17 @@
 #include <FiniteStateMachine.h>
 #include <ClickButton.h>
 
-#define LEFT_ENABLE 3
-#define LEFT_FORWARD 2
-#define LEFT_BACKWARD 4
+#define LEFT_ENABLE    6     // has to be PWM
+#define LEFT_BACKWARD  7
+#define LEFT_FORWARD   8
 
-#define RIGHT_ENABLE 5
-#define RIGHT_FORWARD 6
-#define RIGHT_BACKWARD 7
+#define RIGHT_BACKWARD 9
+#define RIGHT_FORWARD  10
+#define RIGHT_ENABLE   11  // has to be PWM
 
-ClickButton startButton(8, LOW, CLICKBTN_PULLUP);
+#define START_BUTTON_PIN 2
+
+ClickButton startButton(START_BUTTON_PIN, LOW, CLICKBTN_PULLUP);
 
 #define NUMBER_OF_STATES 3
 State Forward = State(go_forward, noop, noop);
@@ -52,6 +54,7 @@ void go_forward(){
   debug("Forward!");
   digitalWrite(LEFT_FORWARD, HIGH);
   digitalWrite(LEFT_BACKWARD, LOW);
+
   digitalWrite(RIGHT_FORWARD, HIGH);
   digitalWrite(RIGHT_BACKWARD, LOW);  
 }

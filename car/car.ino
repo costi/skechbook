@@ -1,13 +1,13 @@
 #include <FiniteStateMachine.h>
 #include <ClickButton.h>
 
-#define LEFT_ENABLE    6     // has to be PWM
-#define LEFT_BACKWARD  7
-#define LEFT_FORWARD   8
+#define LEFT_ENABLE    11    // has to be PWM
+#define LEFT_BACKWARD  10
+#define LEFT_FORWARD   9
 
-#define RIGHT_BACKWARD 9
-#define RIGHT_FORWARD  10
-#define RIGHT_ENABLE   11  // has to be PWM
+#define RIGHT_BACKWARD 8
+#define RIGHT_FORWARD  7
+#define RIGHT_ENABLE   6  // has to be PWM
 
 #define START_BUTTON_PIN 2
 

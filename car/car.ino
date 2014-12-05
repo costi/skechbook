@@ -36,14 +36,13 @@ void loop(){
   startButton.Update();
   analogWrite(LEFT_ENABLE, 200);
   analogWrite(RIGHT_ENABLE, 200);
-  if(startButton.clicks > 0){
+  if(startButton.clicks != 0){
     Serial.println(startButton.clicks);
     Serial.println("Pressed Button");
-    buttonPresses = ++buttonPresses % NUMBER_OF_STATES;
-    switch(buttonPresses){
-      case 0: engineState.transitionTo(Forward); break;
-      case 1: engineState.transitionTo(Backward); break;
-      case 2: engineState.transitionTo(Stopped); break;
+    if(engineState.isInState(Stopped)){
+      startButton.clicks > 0 ? engineState.transitionTo(Forward) : engineState.transitionTo(Backward);
+    } else {
+      engineState.transitionTo(Stopped);
     }
   }
   engineState.update();

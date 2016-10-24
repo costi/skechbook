@@ -16,3 +16,6 @@
 [submodule "libraries/IRremote"]
 	path = libraries/IRremote
 	url = https://github.com/shirriff/Arduino-IRremote
+[submodule "libraries/FastLED"]
+	path = libraries/FastLED
+	url = https://github.com/FastLED/FastLED.git

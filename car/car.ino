@@ -16,7 +16,7 @@
 
 #define IR_FORWARD   0x511DBB
 #define IR_BACKWARD  0xA3C8EDDB
-#define IR_RIGHT     0x52A3D41F
+#define IR_RIGHT     0x20FE4DBB
 #define IR_LEFT      0x52A3D41F
 #define IR_OK        0xD7E84B1B
 
@@ -31,6 +31,7 @@ State Stopped = State(stop_engines, noop, noop);
 
 FSM engineState = FSM(Stopped);
 int engineSpeed = 200; // TODO put it as a variable in engineState
+boolean turningLeft = false, turningRight = false;
 
 IRrecv ir(IR_PIN);
 decode_results ir_results;
@@ -92,6 +93,16 @@ void handleIRAction(unsigned long value){
     lastIrButton = value;
   }
   switch(value){
+    case IR_LEFT:
+      turningLeft = true;
+      go(engineSpeed);
+      turningLeft = false;
+      break;
+    case IR_RIGHT:
+      turningRight = true;
+      go(engineSpeed);
+      turningRight = false;
+      break;
     case IR_FORWARD:
       go(calculateNewSpeed(+10));
       break;
@@ -130,11 +141,30 @@ int calculateNewSpeed(int change){
   return engineSpeed + change;
 }
 
+#define TURN_ZEAL 50
+
 void set_speed(int speed){
+  int leftSpeed, rightSpeed;
   engineSpeed = speed;
+
+  leftSpeed = rightSpeed = abs(engineSpeed);
+
   Serialprint("Setting speed of %d\n\r", engineSpeed);
-  analogWrite(LEFT_ENABLE,  abs(engineSpeed));
-  analogWrite(RIGHT_ENABLE, abs(engineSpeed));
+
+  if(turningLeft){
+    leftSpeed  = calculateNewSpeed(TURN_ZEAL);
+    rightSpeed = calculateNewSpeed(-TURN_ZEAL);
+    Serialprint("Turning LEFT with left speed %d and right speed %d\n", leftSpeed, rightSpeed);
+  }
+
+  if(turningRight){
+    rightSpeed = calculateNewSpeed(TURN_ZEAL);
+    leftSpeed  = calculateNewSpeed(-TURN_ZEAL);
+    Serialprint("Turning RIGHT with left speed %d and right speed %d\n", leftSpeed, rightSpeed);
+  }
+
+  analogWrite(LEFT_ENABLE,  leftSpeed);
+  analogWrite(RIGHT_ENABLE, rightSpeed); 
 }
 
 void go(int speed){
@@ -152,23 +182,40 @@ void go_forward(){
   Serial.println("Forward!");
   //return;
 
-  digitalWrite(LEFT_FORWARD, HIGH);
-  digitalWrite(LEFT_BACKWARD, LOW);
-
-  digitalWrite(RIGHT_FORWARD, HIGH);
-  digitalWrite(RIGHT_BACKWARD, LOW);  
+  left_forward();
+  right_forward();
 }
 
 void go_backward(){
   Serial.println("Backward!");
   //return;
 
-  digitalWrite(LEFT_FORWARD,  LOW);
+  left_backward();
+  right_backward();
+}
+
+void left_forward(){
+  Serial.println("Left Forward!");
+  digitalWrite(LEFT_FORWARD, HIGH);
+  digitalWrite(LEFT_BACKWARD, LOW);
+}
+
+void left_backward(){
+  Serial.println("Left Backward!");
   digitalWrite(LEFT_BACKWARD, HIGH);
+  digitalWrite(LEFT_FORWARD,  LOW);
+}
 
-  digitalWrite(RIGHT_FORWARD,  LOW);
+void right_forward(){
+  Serial.println("Right Forward!");
+  digitalWrite(RIGHT_FORWARD, HIGH);
+  digitalWrite(RIGHT_BACKWARD, LOW);  
+}
+
+void right_backward(){
+  Serial.println("Right Backward!");
   digitalWrite(RIGHT_BACKWARD, HIGH);
-
+  digitalWrite(RIGHT_FORWARD,  LOW);
 }
 
 void stop_engines(){
